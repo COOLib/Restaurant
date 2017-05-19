@@ -1,0 +1,104 @@
+body {
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+    margin: 0px;
+    font-size: small;
+    background-color: khaki;
+}
+
+header {
+    background-color: darkred;
+    color: yellow;
+    text-align: center;
+    padding: 15px;
+    font-size: 400%;
+    font-weight: bold;
+    clear: left;
+}
+
+#left, #main, #right { position: absolute; }
+#left, #main, #right { overflow: auto; padding: 10px; }
+
+#left {
+    width: 290px;
+    top: 95px;
+    background: #7e7e7e;
+    border-right: 1px solid #231F20;
+}
+
+table {
+    border-collapse: collapse;
+    width: 250px;
+}
+
+table, #inputDiv {
+    border: thin dotted #7e7e7e;
+    border-radius: 10px;
+    padding: 10px;
+    background: #efe5d0 url(../image/background.gif) top left;
+    margin: auto;
+}
+
+td {
+    vertical-align: top;
+    padding-bottom: 15px;
+}
+
+table td {
+    text-align: center;
+    padding: 10px;
+}
+
+#main {
+    background: #efe5d0 url(../image/background2.gif) top left;
+    left: 316px;
+    top: 95px;
+    width: 1390px;
+    border-right: 1px solid #231F20;
+}
+
+.imgCenter {
+    text-align:center;
+}
+
+#right {
+
+    top: 95px;
+    left: 1722px;
+}
+
+#inputDiv {
+    width: 145px;
+}
+
+input {
+    border-radius: 7px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.textInput {
+    width: 120px;
+    margin-top: -5px;
+    margin-left: 0px;
+}
+
+.Add {
+    background-color: #DAA520;
+    width: 100px;
+}
+
+.Add:hover {
+    background-color: #FFD700;
+    color: #556B2F;
+}
+
+footer {
+    background-color: #675c47;
+    color: #efe5d0;
+    text-align: center;
+    padding: 15px;
+    margin-top: 823px;
+    font-size: 90%;
+    clear: left;
+}
+
