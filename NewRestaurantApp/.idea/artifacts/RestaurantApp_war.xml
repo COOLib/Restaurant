@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="RestaurantApp:war">
+    <output-path>$PROJECT_DIR$/../Application/target</output-path>
+    <root id="archive" name="RestaurantApp-1.0.war">
+      <element id="artifact" artifact-name="RestaurantApp:war exploded" />
+    </root>
+  </artifact>
+</component>
