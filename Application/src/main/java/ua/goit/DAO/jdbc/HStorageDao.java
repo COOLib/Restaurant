@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.goit.domain.Ingredient;
 import ua.goit.domain.Storage;
@@ -13,6 +14,7 @@ import ua.goit.DAO.StorageDao;
 
 import java.util.List;
 
+@Component
 public class HStorageDao implements StorageDao {
 
     private SessionFactory sessionFactory;

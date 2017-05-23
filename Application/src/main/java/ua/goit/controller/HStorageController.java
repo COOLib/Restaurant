@@ -1,11 +1,15 @@
 package ua.goit.controller;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ua.goit.domain.Ingredient;
 import ua.goit.domain.Storage;
 import ua.goit.DAO.StorageDao;
 
 import java.util.List;
 
+@RestController
+@RequestMapping(value = "/restaurant")
 public class HStorageController {
 
     private StorageDao storageDao;

@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.goit.domain.Dish;
 import ua.goit.domain.Order;
@@ -14,6 +15,7 @@ import ua.goit.DAO.OrderDao;
 
 import java.util.List;
 
+@Component
 public class HOrderDao implements OrderDao {
 
     private SessionFactory sessionFactory;

@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.goit.domain.Cook;
 import ua.goit.domain.Employee;
@@ -15,6 +16,7 @@ import ua.goit.DAO.EmployeeDao;
 
 import java.util.List;
 
+@Component
 public class HEmployeeDao implements EmployeeDao {
 
     private SessionFactory sessionFactory;

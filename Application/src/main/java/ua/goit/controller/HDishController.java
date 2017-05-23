@@ -20,7 +20,7 @@ import java.io.IOException;
 public class HDishController {
 
     @Autowired
-    private DishServiceImpl dishService;
+    private DishService dishService;
     private static HttpHeaders responseHeaders = new HttpHeaders();
 
     @RequestMapping(value = "/addDish", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
@@ -31,7 +31,7 @@ public class HDishController {
 
         dishService.addDish(dish);
 
-        return new ResponseEntity<>("{\"id_order\":" + dish.getName() + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"dish\":" + dish.getName() + "}", responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/deleteDish", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
@@ -42,7 +42,7 @@ public class HDishController {
 
         dishService.deleteDish(name);
 
-        return new ResponseEntity<>("{\"id_order\":" + name + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"deleted\":" + name + "}", responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getDishByName", method = RequestMethod.GET, headers = {"Content-Type=application/json"},

@@ -1,6 +1,8 @@
 package ua.goit.controller;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ua.goit.domain.Dish;
 import ua.goit.domain.Menu;
 import ua.goit.DAO.DishDao;
@@ -8,6 +10,8 @@ import ua.goit.DAO.MenuDao;
 
 import java.util.List;
 
+@RestController
+@RequestMapping(value = "/restaurant")
 public class HMenuController {
 
 
