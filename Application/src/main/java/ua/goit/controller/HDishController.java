@@ -1,50 +1,77 @@
 package ua.goit.controller;
 
-import org.springframework.transaction.annotation.Transactional;
-import ua.goit.domain.Category;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import ua.goit.domain.Dish;
-import ua.goit.domain.Ingredient;
-import ua.goit.DAO.DishDao;
+import ua.goit.service.DishService;
+import ua.goit.service.impl.DishServiceImpl;
 
-import java.util.List;
+import java.io.IOException;
 
+@RestController
+@RequestMapping(value = "/restaurant")
 public class HDishController {
 
-    private DishDao dishDao;
+    @Autowired
+    private DishServiceImpl dishService;
+    private static HttpHeaders responseHeaders = new HttpHeaders();
 
-    @Transactional
-    public void addDish(String dishName, Category category, int price, int weight, List<Ingredient> ingredients) {
+    @RequestMapping(value = "/addDish", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object addDish(Dish dish) {
 
-        Dish dish = new Dish();
+        dishService.addDish(dish);
 
-        dish.setName(dishName);
-        dish.setCategory(category);
-        dish.setPrice(price);
-        dish.setWeight(weight);
-        dish.setIngredient(ingredients);
-
-        dishDao.addDish(dish);
+        return new ResponseEntity<>("{\"id_order\":" + dish.getName() + "}", responseHeaders, HttpStatus.OK);
     }
 
-    @Transactional
-    public void deleteDish(String name) {
+    @RequestMapping(value = "/deleteDish", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object deleteDish(String name) {
 
-        dishDao.removeDish(name);
+        dishService.deleteDish(name);
+
+        return new ResponseEntity<>("{\"id_order\":" + name + "}", responseHeaders, HttpStatus.OK);
     }
 
-    @Transactional
-    public Dish getByName(String name) {
+    @RequestMapping(value = "/getDishByName", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getByName(String name) {
 
-        return dishDao.findDishByName(name);
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(dishService.getByName(name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    @Transactional
-    public List<Dish> getAllDishes() {
+    @RequestMapping(value = "/getAllDishes", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getAllDishes() {
 
-        return dishDao.getAllDishes();
-    }
-
-    public void setDishDao(DishDao dishDao) {
-        this.dishDao = dishDao;
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(dishService.getAllDishes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

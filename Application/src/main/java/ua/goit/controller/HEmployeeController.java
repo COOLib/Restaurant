@@ -1,9 +1,11 @@
 package ua.goit.controller;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import ua.goit.domain.*;
 import ua.goit.DAO.EmployeeDao;
+import ua.goit.service.EmployeeService;
+import ua.goit.service.impl.EmployeeServiceImpl;
 
 import java.util.Date;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 public class HEmployeeController {
 
     private EmployeeDao employeeDao;
+    @Autowired
+    private EmployeeService employeeService;
 
 
     public void addEmployee(String name, String surname, Date birth, String phone, int salary) {

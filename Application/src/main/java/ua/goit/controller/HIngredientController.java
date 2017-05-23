@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.goit.domain.Ingredient;
-import ua.goit.DAO.IngredientDao;
 import ua.goit.service.IngredientService;
+import ua.goit.service.impl.IngredientServiceImpl;
 
 @RestController
 @RequestMapping(value = "/restaurant")
