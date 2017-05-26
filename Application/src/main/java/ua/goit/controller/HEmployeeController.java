@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.goit.domain.*;
 import ua.goit.DAO.EmployeeDao;
 import ua.goit.service.EmployeeService;
@@ -19,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restaurant")
+@RequestMapping(value = "/restaurant/employee")
 public class HEmployeeController {
 
     @Autowired
@@ -27,56 +24,52 @@ public class HEmployeeController {
     private static HttpHeaders responseHeaders = new HttpHeaders();
 
 
-    @RequestMapping(value = "/addEmployee", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/add", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object addEmployee(Employee employee) {
+    Object addEmployee(@RequestBody Employee employee) {
 
         employeeService.addEmployee(employee);
-
-        return new ResponseEntity<>("{\"employee\":" + employee.getName() + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"employee\":\"" + employee.getName() + "\"}", responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/addWaiter", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object addWaiter(Waiter waiter) {
+    Object addWaiter(@RequestBody Waiter waiter) {
 
         employeeService.addWaiter(waiter);
-
-        return new ResponseEntity<>("{\"waiter\":" + waiter.getName() + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"waiter\":\"" + waiter.getName() + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/addWaiter", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/addCook", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object addCook(Cook cook) {
+    Object addCook(@RequestBody Cook cook) {
 
         employeeService.addCook(cook);
-
-        return new ResponseEntity<>("{\"cook\":" + cook.getName() + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"cook\":\"" + cook.getName() + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/deleteEmployee", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/delete/{name}", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object deleteEmployee(String name) {
+    Object deleteEmployee(@PathVariable("name") String name) {
 
         employeeService.deleteEmployee(name);
-
-        return new ResponseEntity<>("{\"deleted\":" + name + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"deleted\":\"" + name + "\"}", responseHeaders, HttpStatus.OK);
 
     }
 
-    @RequestMapping(value = "/getEmployeeByName", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/get/{name}", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object getByName(String name) {
+    Object getByName(@PathVariable("name") String name) {
 
         String result = null;
         try {
@@ -87,7 +80,7 @@ public class HEmployeeController {
         return result;
     }
 
-    @RequestMapping(value = "/getAllEmployees", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody

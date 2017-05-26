@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.goit.domain.Dish;
 import ua.goit.service.DishService;
 import ua.goit.service.impl.DishServiceImpl;
@@ -16,40 +13,38 @@ import ua.goit.service.impl.DishServiceImpl;
 import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/restaurant")
+@RequestMapping(value = "/restaurant/dish")
 public class HDishController {
 
     @Autowired
     private DishService dishService;
     private static HttpHeaders responseHeaders = new HttpHeaders();
 
-    @RequestMapping(value = "/addDish", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/add", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object addDish(Dish dish) {
+    Object addDish(@RequestBody Dish dish) {
 
         dishService.addDish(dish);
-
-        return new ResponseEntity<>("{\"dish\":" + dish.getName() + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"dish\":\"" + dish.getName() + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/deleteDish", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/delete/{name}", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object deleteDish(String name) {
+    Object deleteDish(@PathVariable("name") String name) {
 
         dishService.deleteDish(name);
-
-        return new ResponseEntity<>("{\"deleted\":" + name + "}", responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>("{\"deleted\":\"" + name + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getDishByName", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/get/{name}", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object getByName(String name) {
+    Object getByName(@PathVariable("name") String name) {
 
         String result = null;
         try {
@@ -60,7 +55,7 @@ public class HDishController {
         return result;
     }
 
-    @RequestMapping(value = "/getAllDishes", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody

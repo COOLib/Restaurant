@@ -1,50 +1,107 @@
 package ua.goit.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ua.goit.domain.Ingredient;
 import ua.goit.domain.Storage;
 import ua.goit.DAO.StorageDao;
+import ua.goit.service.IngredientService;
+import ua.goit.service.StorageService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restaurant")
+@RequestMapping(value = "/restaurant/storage")
 public class HStorageController {
 
-    private StorageDao storageDao;
-    private HIngredientController ingredientController;
+    @Autowired
+    private IngredientService ingredientService;
 
-    public void addIngredientToStorage(String name, int quantity) {
+    @Autowired
+    private StorageService storageService;
 
-        ingredientController.addIngredient(name);
-        Ingredient ingredient = ingredientController.getByName(name);
-        storageDao.addIngredientToStorage(ingredient, quantity);
+    private static HttpHeaders responseHeaders = new HttpHeaders();
+
+
+    @RequestMapping(value = "/add/{ingredientName}/{quantity}", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object addIngredientToStorage(@PathVariable("ingredientName") String ingredientName, @PathVariable("quantity") int quantity) {
+
+        storageService.addIngredientToStorage(ingredientName, quantity);
+        return new ResponseEntity<>("{\"ingredient\":\"" + ingredientName + "\",\"quantity\":" + quantity + "}", responseHeaders, HttpStatus.OK);
+
     }
 
-    public void removeIngredientFromStorage(String name) {
+    @RequestMapping(value = "/delete/{name}", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object removeIngredientFromStorage(@PathVariable("name") String name) {
 
-        storageDao.removeIngredientFromStorage(name);
+        storageService.removeIngredientFromStorage(name);
+        return new ResponseEntity<>("{\"deleted\":\"" + name + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    public List<Storage> getAllIngredients() {
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getAllIngredients() {
 
-        return storageDao.getAllIngredients();
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(storageService.getAllIngredients());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    public List<Storage> getEndingIngredients() {
+    @RequestMapping(value = "/getEnding", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getEndingIngredients() {
 
-        return storageDao.getAllEndingIngredients();
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(storageService.getEndingIngredients());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    public Storage getByIngredientName(String name) {
+    @RequestMapping(value = "/get/{name}", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getByIngredientName(@PathVariable("name") String name) {
 
-        return storageDao.findIngredientByName(name);
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(storageService.getByIngredientName(name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    public void updateQuantity(String ingredientName, int addingAmount) {
+    @RequestMapping(value = "/add/{ingredientName}/{quantity}", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object updateQuantity(@PathVariable("ingredientName") String ingredientName, @PathVariable("quantity") int quantity) {
 
-        storageDao.updateQuantity(ingredientName, addingAmount);
+        storageService.updateQuantity(ingredientName,quantity);
+        return new ResponseEntity<>("{\"ingredient\":\"" + ingredientName + "\",\"quantity\":" + quantity + "}", responseHeaders, HttpStatus.OK);
     }
 
     public void setStorageDao(StorageDao storageDao) {

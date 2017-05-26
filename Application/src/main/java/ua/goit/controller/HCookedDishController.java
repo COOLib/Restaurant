@@ -11,16 +11,15 @@ import ua.goit.domain.*;
 import ua.goit.service.CookedDishService;
 
 @RestController
-@RequestMapping(value = "/restaurant")
+@RequestMapping(value = "/restaurant/cookedDishes")
 public class HCookedDishController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HCookedDishController.class);
     private static HttpHeaders responseHeaders = new HttpHeaders();
 
     @Autowired
     private CookedDishService cookedDishService;
 
-    @RequestMapping(value = "/addCookedDish", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+    @RequestMapping(value = "/add", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
@@ -29,7 +28,7 @@ public class HCookedDishController {
         return new ResponseEntity<>("{\"id_cookedDish\":" + cookedDish.getId() + "}",responseHeaders, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getAllCookedDishes", method = RequestMethod.GET, produces = {"application/json; charset=UTF-8"})
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
     Object getAllCookedDishes() {

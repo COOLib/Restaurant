@@ -28,7 +28,6 @@ public class IngredientServiceImpl  implements IngredientService {
     public Ingredient addIngredient(String name) {
 
         Ingredient ingredient = new Ingredient();
-
         ingredient.setName(name);
         ingredientDao.addIngredient(ingredient);
 

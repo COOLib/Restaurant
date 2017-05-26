@@ -1,69 +1,100 @@
 package ua.goit.controller;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.goit.domain.Dish;
 import ua.goit.domain.Menu;
 import ua.goit.DAO.DishDao;
 import ua.goit.DAO.MenuDao;
+import ua.goit.service.DishService;
+import ua.goit.service.MenuService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/restaurant")
+@RequestMapping(value = "/restaurant/menu")
 public class HMenuController {
 
 
-    private MenuDao menuDao;
-    private DishDao dishDao;
+    @Autowired
+    private MenuService menuService;
 
-    @Transactional
-    public List<Menu> getAllMenus() {
+    private static HttpHeaders responseHeaders = new HttpHeaders();
 
-        return menuDao.getAllMenus();
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getAllMenus() {
+
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(menuService.getAllMenus());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    @Transactional
-    public void addMenu(String name, List<Dish> dishes) {
+    @RequestMapping(value = "/add", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object addMenu(@RequestBody Menu menu) {
 
-        Menu menu = new Menu();
-
-        menu.setName(name);
-        menu.setDishes(dishes);
-
-        menuDao.addMenu(menu);
+        menuService.addMenu(menu);
+        return new ResponseEntity<>("{\"menu\":\"" + menu.getName() + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    @Transactional
-    public void deleteMenu(String name) {
+    @RequestMapping(value = "/delete/{name}", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object deleteMenu(@PathVariable("name") String name) {
 
-        menuDao.removeMenu(name);
+        menuService.deleteMenu(name);
+        return new ResponseEntity<>("{\"deleted\":\"" + name + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    @Transactional
-    public Menu getByName(String name) {
+    @RequestMapping(value = "/get/{name}", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getByName(@PathVariable("name") String name) {
 
-        return menuDao.findMenuByName(name);
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(menuService.getByName(name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    @Transactional
-    public void addDishToMenu(String menuName, String dishName) {
+    @RequestMapping(value = "/addToMenu/{menuName}/{dishName}", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object addDishToMenu(@PathVariable("menuName") String menuName, @PathVariable("dishName") String dishName) {
 
-        menuDao.addDishToMenu(menuName, dishName);
+        menuService.addDishToMenu(menuName, dishName);
+        return new ResponseEntity<>("{\"menu\":\"" + menuName + "\",\"dish\":\"" + dishName + "\"}", responseHeaders, HttpStatus.OK);
     }
 
-    @Transactional
-    public void deleteDishFromMenu(String menuName, String dishName) {
+    @RequestMapping(value = "/deleteFromMenu/{menuName}/{dishName}", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object deleteDishFromMenu(@PathVariable("menuName") String menuName, @PathVariable("dishName") String dishName) {
 
-        menuDao.removeDishFromMenu(menuName, dishName);
-    }
+        menuService.deleteDishFromMenu(menuName, dishName);
+        return new ResponseEntity<>("{\"deleted\":\"" + dishName + "\",menu\":\"" + menuName + "\"}", responseHeaders, HttpStatus.OK);
 
-    public void setMenuDao(MenuDao menuDao) {
-        this.menuDao = menuDao;
-    }
-
-    public void setDishDao(DishDao dishDao) {
-        this.dishDao = dishDao;
     }
 }
