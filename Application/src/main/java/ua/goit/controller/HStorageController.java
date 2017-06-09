@@ -6,14 +6,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.goit.domain.Ingredient;
-import ua.goit.domain.Storage;
-import ua.goit.DAO.StorageDao;
+
 import ua.goit.service.IngredientService;
 import ua.goit.service.StorageService;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/restaurant/storage")
@@ -100,15 +97,7 @@ public class HStorageController {
     @ResponseBody
     Object updateQuantity(@PathVariable("ingredientName") String ingredientName, @PathVariable("quantity") int quantity) {
 
-        storageService.updateQuantity(ingredientName,quantity);
+        storageService.updateQuantity(ingredientName, quantity);
         return new ResponseEntity<>("{\"ingredient\":\"" + ingredientName + "\",\"quantity\":" + quantity + "}", responseHeaders, HttpStatus.OK);
-    }
-
-    public void setStorageDao(StorageDao storageDao) {
-        this.storageDao = storageDao;
-    }
-
-    public void setIngredientController(HIngredientController ingredientController) {
-        this.ingredientController = ingredientController;
     }
 }

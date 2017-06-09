@@ -1,7 +1,10 @@
 package ua.goit.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ua.goit.domain.Dish;
 import ua.goit.domain.Order;
@@ -9,6 +12,7 @@ import ua.goit.domain.Waiter;
 import ua.goit.DAO.DishDao;
 import ua.goit.DAO.EmployeeDao;
 import ua.goit.DAO.OrderDao;
+import ua.goit.service.OrderService;
 
 import java.util.Date;
 import java.util.List;
@@ -18,12 +22,14 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/restaurant")
 public class HOrderController {
 
-    private OrderDao orderDao;
-    private EmployeeDao employeeDao;
-    private DishDao dishDao;
+    @Autowired
+    private OrderService orderService;
 
-    @Transactional
-    public void addOrder(String waiterName, List<String> dishes, int tableNumber) {
+    @RequestMapping(value = "/add/{ingredientName}/{quantity}", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object addOrder(String waiterName, List<String> dishes, int tableNumber) {
 
         Order order = new Order();
         order.setWaiter((Waiter) employeeDao.findEmployeeByName(waiterName));
