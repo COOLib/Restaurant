@@ -1,11 +1,12 @@
 package ua.goit.controller;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.goit.domain.Dish;
 import ua.goit.domain.Order;
 import ua.goit.domain.Waiter;
@@ -14,91 +15,117 @@ import ua.goit.DAO.EmployeeDao;
 import ua.goit.DAO.OrderDao;
 import ua.goit.service.OrderService;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/restaurant")
+@RequestMapping(value = "/restaurant/order")
 public class HOrderController {
 
     @Autowired
     private OrderService orderService;
+    private static HttpHeaders responseHeaders = new HttpHeaders();
 
-    @RequestMapping(value = "/add/{ingredientName}/{quantity}", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+
+    @RequestMapping(value = "/add", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
             produces = {"application/json; charset=UTF-8"})
     public
     @ResponseBody
-    Object addOrder(String waiterName, List<String> dishes, int tableNumber) {
+    Object addOrder(@RequestBody Order order) {
 
-        Order order = new Order();
-        order.setWaiter((Waiter) employeeDao.findEmployeeByName(waiterName));
-        order.setDishes(createDishes(dishes));
-        order.setTableNumber(tableNumber);
         order.setDate(new Date());
         order.setClosed("opened");
 
-        orderDao.createNewOrder(order);
+        orderService.addOrder(order);
+        return new ResponseEntity<>("{\"order\":\"" + order.getNumber() + "\"}", responseHeaders, HttpStatus.OK);
+
     }
 
-    private List<Dish> createDishes(List<String> dishes) {
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object deleteDish(@PathVariable("id") Integer id) {
 
-        List<Dish> result = dishes.stream().map(dishName -> dishDao.findDishByName(dishName)).collect(Collectors.toList());
+        orderService.deleteOrder(id);
+        return new ResponseEntity<>("{\"deleted\":\"" + id + "\"}", responseHeaders, HttpStatus.OK);
+    }
 
+    @RequestMapping(value = "/turnToClosed/{id}", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object turnToClosed(@PathVariable("id") int id) {
+
+       orderService.turnToClosed(id);
+       return new ResponseEntity<>("{\"closed\":\"" + id + "\"}", responseHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getById(@PathVariable("id") int id) {
+
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(orderService.getById(id));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
-    @Transactional
-    public void deleteOrder(int id) {
+    @RequestMapping(value = "/getAllClosed", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getAllClosed() {
 
-        orderDao.removeOrder(id);
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(orderService.getAllClosed());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    @Transactional
-    public void turnToClosed(int id) {
+    @RequestMapping(value = "/getAllOpened", method = RequestMethod.GET, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object getAllOpened() {
 
-        orderDao.turnToClosed(id);
+        String result = null;
+        try {
+            result = new ObjectMapper().writeValueAsString(orderService.getAllOpened());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    @Transactional
-    public Order getById(int id) {
+    @RequestMapping(value = "/addDishToOrder/{orderId}/{dishName}", method = RequestMethod.PUT, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object addDishToOrder(@PathVariable("orderId") int orderId, @PathVariable("dishName") String dishName) {
 
-        return orderDao.findOrderById(id);
+        orderService.addDishToOrder(orderId, dishName);
+        return new ResponseEntity<>("{\"order\":\"" + orderId + "\",\"dish\":\"" + dishName + "\"}", responseHeaders, HttpStatus.OK);
+
     }
 
-    @Transactional
-    public List<Order> getAllClosed() {
+    @RequestMapping(value = "/deleteDishFromOrder/{orderId}/{dishName}", method = RequestMethod.DELETE, headers = {"Content-Type=application/json"},
+            produces = {"application/json; charset=UTF-8"})
+    public
+    @ResponseBody
+    Object deleteDishFromOrder(@PathVariable("orderId") int orderId, @PathVariable("dishName") String dishName) {
 
-        return orderDao.getAllClosedOrders();
-    }
-
-    @Transactional
-    public List<Order> getAllOpened() {
-
-        return orderDao.getAllOpenedOrders();
-    }
-
-    @Transactional
-    public void addDishToOrder(int orderId, String dishName) {
-
-        orderDao.addDishToOrder(orderId, dishName);
-    }
-
-    @Transactional
-    public void deleteDishFromOrder(int orderId, String dishName) {
-
-        orderDao.deleteDishFromOrder(dishName, orderId);
-    }
-
-    public void setOrderDao(OrderDao orderDao) {
-        this.orderDao = orderDao;
-    }
-
-    public void setEmployeeDao(EmployeeDao employeeDao) {
-        this.employeeDao = employeeDao;
-    }
-
-    public void setDishDao(DishDao dishDao) {
-        this.dishDao = dishDao;
+        orderService.deleteDishFromOrder(orderId, dishName);
+        return new ResponseEntity<>("{\"order\":\"" + orderId + "\",\"dish\":\"" + dishName + "\"}", responseHeaders, HttpStatus.OK);
     }
 }
