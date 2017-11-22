@@ -4,8 +4,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +16,11 @@ import java.util.List;
 public class HDishDao implements DishDao {
 
     private SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(HDishDao.class);
 
     @Override
     @Transactional
     public void addDish(Dish dish) {
 
-        LOGGER.info("Connecting to database. Running method is addDish");
         sessionFactory.getCurrentSession().save(dish);
     }
 
@@ -32,7 +28,6 @@ public class HDishDao implements DishDao {
     @Transactional
     public void removeDish(String name) {
 
-        LOGGER.info("Connecting to database. Running method is removeDish");
         Dish dish = findDishByName(name);
         sessionFactory.getCurrentSession().delete(dish);
     }
@@ -40,8 +35,6 @@ public class HDishDao implements DishDao {
     @Override
     @Transactional
     public Dish findDishByName(String name) {
-
-        LOGGER.info("Connecting to database. Running method is findDishByName");
 
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
@@ -52,7 +45,6 @@ public class HDishDao implements DishDao {
         Dish dish = (Dish) criteria.uniqueResult();
 
         if (dish == null) {
-            LOGGER.error("Cannot find dish with name " + name);
             throw new RuntimeException("Cannot find dish with name " + name);
         }
         return dish;
@@ -61,8 +53,6 @@ public class HDishDao implements DishDao {
     @Override
     @Transactional
     public List<Dish> getAllDishes() {
-
-        LOGGER.info("Connecting to database. Running method is getAllDishes");
 
         Session session = sessionFactory.getCurrentSession();
 

@@ -125,33 +125,12 @@
         </dependency>
 
         <!--Unit Tests-->
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-        </dependency>
-
-        <!--Logging-->
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.21</version>
-        </dependency>
-
-        <!--Cash and second level cash-->
-
-        <dependency>
-            <groupId>net.sf.ehcache.internal</groupId>
-            <artifactId>ehcache-core</artifactId>
-            <version>2.10.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>3.1.0</version>
         </dependency>
 
         <!--Object mapping-->

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.goit.domain.Ingredient;
 import ua.goit.domain.Storage;
 import ua.goit.DAO.StorageDao;
+import ua.goit.service.IngredientService;
 import ua.goit.service.StorageService;
 import ua.goit.service.impl.IngredientServiceImpl;
 
@@ -21,7 +22,7 @@ public class StorageServiceImpl implements StorageService {
     private StorageDao storageDao;
 
     @Autowired
-    private IngredientServiceImpl ingredientService;
+    private IngredientService ingredientService;
 
     @Transactional
     public Ingredient addIngredientToStorage(String name, int quantity) {

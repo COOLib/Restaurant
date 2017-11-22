@@ -4,8 +4,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.goit.domain.Ingredient;
@@ -18,13 +16,10 @@ import java.util.List;
 public class HStorageDao implements StorageDao {
 
     private SessionFactory sessionFactory;
-    private static final Logger LOGGER = LoggerFactory.getLogger(HStorageDao.class);
 
     @Override
     @Transactional
     public void addIngredientToStorage(Ingredient ingredient, int quantity) {
-
-        LOGGER.info("Connecting to database. Running method is addIngredientToStorage");
 
         Storage storage = new Storage();
 
@@ -37,7 +32,6 @@ public class HStorageDao implements StorageDao {
     @Transactional
     public void removeIngredientFromStorage(String name) {
 
-        LOGGER.info("Connecting to database. Running method is removeIngredientFromStorage");
         Storage storage = findIngredientByName(name);
 
         int quantity = storage.getQuantity() * (-1);
@@ -48,8 +42,6 @@ public class HStorageDao implements StorageDao {
     @Transactional
     public List getAllIngredients() {
 
-        LOGGER.info("Connecting to database. Running method is getAllIngredients");
-
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         return session.createCriteria(Storage.class).list();
@@ -58,8 +50,6 @@ public class HStorageDao implements StorageDao {
     @Override
     @Transactional
     public List<Storage> getAllEndingIngredients() {
-
-        LOGGER.info("Connecting to database. Running method is getAllEndingIngredients");
 
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
@@ -73,8 +63,6 @@ public class HStorageDao implements StorageDao {
     @Transactional
     public Storage findIngredientByName(String name) {
 
-        LOGGER.info("Connecting to database. Running method is findIngredientByName");
-
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("select e from Storage e where e.id=" +
                 "(select o.id from Ingredient o where o.name=:name)");
@@ -83,7 +71,6 @@ public class HStorageDao implements StorageDao {
         Storage storage = (Storage) query.uniqueResult();
 
         if (storage == null) {
-            LOGGER.error("Cannot find ingredient with name " + name + " at storage");
             throw new RuntimeException("Cannot find ingredient with name " + name + " at storage");
 
         }
@@ -95,8 +82,6 @@ public class HStorageDao implements StorageDao {
     @Transactional
     public void updateQuantity(String ingredientName, int quantity) {
 
-        LOGGER.info("Connecting to database. Running method is updateQuantity");
-
         Storage storage = findIngredientByName(ingredientName);
         int realQuantity = storage.getQuantity();
 
@@ -104,7 +89,6 @@ public class HStorageDao implements StorageDao {
             storage.setQuantity(realQuantity + quantity);
         } else {
 
-            LOGGER.error("Cannot update quantity at storage, because it will be less than zero.");
             throw new RuntimeException("Cannot update quantity at storage, because it will be less than zero.");
         }
     }

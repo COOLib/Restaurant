@@ -1,7 +1,5 @@
 package ua.goit.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,6 @@ import java.util.List;
 @Service
 public class CookedDishServiceImpl implements CookedDishService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HCookedDishController.class);
 
     @Autowired
     private CookedDishDao cookedDishDao;
@@ -63,7 +60,6 @@ public class CookedDishServiceImpl implements CookedDishService {
             String s = "Order " + orderNumber + " doesn't contain a dish named " + dishName +
                     ". This dish can't be added to the list of the cooked dishes.";
 
-            LOGGER.error(s);
             throw new RuntimeException(s);
         }
     }
